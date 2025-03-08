@@ -5,6 +5,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { register } from '../../store/actions';
+import { RegisterRequestInterface } from '../../types/registerRequest.interface';
 
 interface RegistrationForm {
   username: string;
@@ -16,10 +20,11 @@ interface RegistrationForm {
   selector: 'mc-register',
   templateUrl: './register.component.html',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, RouterLink],
 })
 export class RegisterComponent {
-  fb = inject(FormBuilder);
+  public fb = inject(FormBuilder);
+  private store = inject(Store);
 
   signUpForm = this.fb.nonNullable.group({
     username: ['', Validators.required],
@@ -28,6 +33,9 @@ export class RegisterComponent {
   });
 
   public onSubmit(): void {
-    console.log('form', this.signUpForm.getRawValue());
+    const request: RegisterRequestInterface = {
+      user: this.signUpForm.getRawValue(),
+    };
+    this.store.dispatch(register({ request }));
   }
 }
