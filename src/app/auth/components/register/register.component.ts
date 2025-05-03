@@ -36,6 +36,7 @@ export class RegisterComponent {
     const request: RegisterRequestInterface = {
       user: this.signUpForm.getRawValue(),
     };
+
     this.store.dispatch(register({ request }));
   }
 }
