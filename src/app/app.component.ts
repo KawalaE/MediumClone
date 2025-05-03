@@ -7,6 +7,4 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   standalone: true,
 })
-export class AppComponent {
-  name = 'josh';
-}
+export class AppComponent {}
