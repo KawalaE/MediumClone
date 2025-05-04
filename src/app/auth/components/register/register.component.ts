@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
@@ -8,6 +9,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { register } from '../../store/actions';
+import { selectIsSubmitting } from '../../store/reducers';
 import { RegisterRequestInterface } from '../../types/registerRequest.interface';
 
 interface RegistrationForm {
@@ -20,7 +22,7 @@ interface RegistrationForm {
   selector: 'mc-register',
   templateUrl: './register.component.html',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, RouterLink],
+  imports: [FormsModule, ReactiveFormsModule, RouterLink, CommonModule],
 })
 export class RegisterComponent {
   public fb = inject(FormBuilder);
@@ -31,6 +33,8 @@ export class RegisterComponent {
     email: ['', Validators.required],
     password: ['', Validators.required],
   });
+
+  isSubmitting$ = this.store.select(selectIsSubmitting);
 
   public onSubmit(): void {
     const request: RegisterRequestInterface = {
