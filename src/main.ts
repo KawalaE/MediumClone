@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { isDevMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
@@ -9,9 +10,10 @@ import { authFeatureKey, authReducer } from './app/auth/store/reducers';
 
 bootstrapApplication(AppComponent, {
   providers: [
+    provideHttpClient(),
     provideRouter(appRoutes),
     provideStore(),
-    provideState(authFeatureKey, authReducer),
+    provideState(authFeatureKey, authReducer), //registered in main because authentication is needed globally
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode

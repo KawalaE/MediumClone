@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { AuthService } from '../../services/auth.service';
 import { register } from '../../store/actions';
 import { selectIsSubmitting } from '../../store/reducers';
 import { RegisterRequestInterface } from '../../types/registerRequest.interface';
@@ -27,6 +28,7 @@ interface RegistrationForm {
 export class RegisterComponent {
   public fb = inject(FormBuilder);
   private store = inject(Store);
+  private authService = inject(AuthService);
 
   signUpForm = this.fb.nonNullable.group({
     username: ['', Validators.required],
@@ -42,5 +44,10 @@ export class RegisterComponent {
     };
 
     this.store.dispatch(register({ request }));
+    this.authService.register(request).subscribe({
+      next: (data) => {
+        console.log(data);
+      },
+    });
   }
 }
