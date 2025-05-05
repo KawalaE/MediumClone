@@ -9,7 +9,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AuthService } from '../../services/auth.service';
-import { register } from '../../store/actions';
+import { authActions } from '../../store/actions';
 import { selectIsSubmitting } from '../../store/reducers';
 import { RegisterRequestInterface } from '../../types/registerRequest.interface';
 
@@ -43,7 +43,7 @@ export class RegisterComponent {
       user: this.signUpForm.getRawValue(),
     };
 
-    this.store.dispatch(register({ request }));
+    this.store.dispatch(authActions.register({ request }));
     this.authService.register(request).subscribe({
       next: (data) => {
         console.log(data);

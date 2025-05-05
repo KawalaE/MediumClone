@@ -2,10 +2,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { isDevMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { provideEffects } from '@ngrx/effects';
 import { provideState, provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { AppComponent } from './app/app.component';
 import { appRoutes } from './app/app.routes';
+import * as authEffects from './app/auth/store/effects';
 import { authFeatureKey, authReducer } from './app/auth/store/reducers';
 
 bootstrapApplication(AppComponent, {
@@ -14,6 +16,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(appRoutes),
     provideStore(),
     provideState(authFeatureKey, authReducer), //registered in main because authentication is needed globally
+    provideEffects(authEffects),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode
