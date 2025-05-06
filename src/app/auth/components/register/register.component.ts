@@ -8,9 +8,14 @@ import {
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { combineLatest } from 'rxjs';
+import { BackendErrorsMessages } from '../../../shared/types/components/backendErrorMessages/backendErrorMessages.component';
 import { AuthService } from '../../services/auth.service';
 import { authActions } from '../../store/actions';
-import { selectIsSubmitting } from '../../store/reducers';
+import {
+  selectIsSubmitting,
+  selectValidationErrors,
+} from '../../store/reducers';
 import { RegisterRequestInterface } from '../../types/registerRequest.interface';
 
 interface RegistrationForm {
@@ -23,7 +28,13 @@ interface RegistrationForm {
   selector: 'mc-register',
   templateUrl: './register.component.html',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, RouterLink, CommonModule],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    RouterLink,
+    CommonModule,
+    BackendErrorsMessages,
+  ],
 })
 export class RegisterComponent {
   public fb = inject(FormBuilder);
@@ -36,7 +47,10 @@ export class RegisterComponent {
     password: ['', Validators.required],
   });
 
-  isSubmitting$ = this.store.select(selectIsSubmitting);
+  data$ = combineLatest({
+    isSubmitting: this.store.select(selectIsSubmitting),
+    backendErrors: this.store.select(selectValidationErrors),
+  });
 
   public onSubmit(): void {
     const request: RegisterRequestInterface = {
