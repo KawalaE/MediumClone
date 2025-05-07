@@ -3,7 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { CurrentUserInterface } from '../../shared/types/currentUser.interface';
-import { AuthResponse } from '../types/authResponse.interface';
+import { AuthResponseInterface } from '../types/authResponse.interface';
+import { LoginRequestInterface } from '../types/loginRequest.interface';
 import { RegisterRequestInterface } from '../types/registerRequest.interface';
 @Injectable({
   providedIn: 'root',
@@ -11,11 +12,22 @@ import { RegisterRequestInterface } from '../types/registerRequest.interface';
 export class AuthService {
   private http = inject(HttpClient);
 
+  getUser(response: AuthResponseInterface): CurrentUserInterface {
+    return response.user;
+  }
+
   register(data: RegisterRequestInterface): Observable<CurrentUserInterface> {
     console.log(data);
     const url = environment.apiUrl + '/users';
     return this.http
-      .post<AuthResponse>(url, data)
-      .pipe(map((response) => response.user));
+      .post<AuthResponseInterface>(url, data)
+      .pipe(map(this.getUser));
+  }
+
+  login(data: LoginRequestInterface): Observable<CurrentUserInterface> {
+    const url = environment.apiUrl + '/users/login';
+    return this.http
+      .post<AuthResponseInterface>(url, data)
+      .pipe(map(this.getUser));
   }
 }

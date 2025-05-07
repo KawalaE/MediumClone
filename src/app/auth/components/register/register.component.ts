@@ -9,7 +9,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
-import { BackendErrorsMessages } from '../../../shared/types/components/backendErrorMessages/backendErrorMessages.component';
+import { BackendErrorsMessages } from '../../../shared/components/backendErrorMessages/backendErrorMessages.component';
 import { AuthService } from '../../services/auth.service';
 import { authActions } from '../../store/actions';
 import {
