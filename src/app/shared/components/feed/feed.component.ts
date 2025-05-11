@@ -3,6 +3,8 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
+import { ErrorMessageComponent } from '../errorMessage/errorMessage.component';
+import { LoadingComponent } from '../loading/loading.component';
 import { feedActions } from './store/actions';
 import { selectError, selectFeedData, selectIsLoading } from './store/reducers';
 
@@ -10,7 +12,7 @@ import { selectError, selectFeedData, selectIsLoading } from './store/reducers';
   selector: 'mc-feed',
   templateUrl: './feed.component.html',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ErrorMessageComponent, LoadingComponent],
 })
 export class FeedComponent implements OnInit {
   @Input() apiUrl: string = '';
