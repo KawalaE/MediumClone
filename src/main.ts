@@ -9,6 +9,11 @@ import { AppComponent } from './app/app.component';
 import { appRoutes } from './app/app.routes';
 import * as authEffects from './app/auth/store/effects';
 import { authFeatureKey, authReducer } from './app/auth/store/reducers';
+import * as feedEffects from './app/shared/components/feed/store/effects';
+import {
+  feedFeatureKey,
+  feedReducer,
+} from './app/shared/components/feed/store/reducers';
 import { authInterceptor } from './app/shared/services/authInterceptor';
 
 bootstrapApplication(AppComponent, {
@@ -17,7 +22,8 @@ bootstrapApplication(AppComponent, {
     provideRouter(appRoutes),
     provideStore(),
     provideState(authFeatureKey, authReducer), //registered in main because authentication is needed globally
-    provideEffects(authEffects),
+    provideState(feedFeatureKey, feedReducer),
+    provideEffects(authEffects, feedEffects),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode
