@@ -1,22 +1,32 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
+import queryString from 'query-string';
 import { combineLatest } from 'rxjs';
+import { environment } from '../../../../environments/environment.development';
 import { ErrorMessageComponent } from '../errorMessage/errorMessage.component';
 import { LoadingComponent } from '../loading/loading.component';
+import { PaginationComponent } from '../pagination/pagination.component';
 import { feedActions } from './store/actions';
 import { selectError, selectFeedData, selectIsLoading } from './store/reducers';
-
 @Component({
   selector: 'mc-feed',
   templateUrl: './feed.component.html',
   standalone: true,
-  imports: [CommonModule, RouterLink, ErrorMessageComponent, LoadingComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    ErrorMessageComponent,
+    LoadingComponent,
+    PaginationComponent,
+  ],
 })
 export class FeedComponent implements OnInit {
   @Input() apiUrl: string = '';
   store = inject(Store);
+  router = inject(Router);
+  route = inject(ActivatedRoute);
 
   data$ = combineLatest({
     isLoading: this.store.select(selectIsLoading),
@@ -24,7 +34,27 @@ export class FeedComponent implements OnInit {
     feed: this.store.select(selectFeedData),
   });
 
+  limit = environment.limit;
+  baseURL = this.router.url.split('?')[0];
+  currentPage = 0;
+
   ngOnInit(): void {
-    this.store.dispatch(feedActions.getFeed({ url: this.apiUrl }));
+    //We do not have to unsubscribe from routing, routing does it by itself
+    this.route.queryParams.subscribe((params: Params) => {
+      this.currentPage = Number(params['page'] || '1');
+      this.fetchFeed();
+    });
+  }
+
+  fetchFeed(): void {
+    const offset = this.currentPage * this.limit - this.limit;
+    const parsedUrl = queryString.parseUrl(this.apiUrl);
+    const stringifiedParams = queryString.stringify({
+      limit: this.limit,
+      offset,
+      ...parsedUrl.query,
+    });
+    const apiUrlWithParams = `${parsedUrl.url}?${stringifiedParams}`;
+    this.store.dispatch(feedActions.getFeed({ url: apiUrlWithParams }));
   }
 }
