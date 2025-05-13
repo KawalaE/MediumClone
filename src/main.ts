@@ -14,6 +14,11 @@ import {
   feedFeatureKey,
   feedReducer,
 } from './app/shared/components/feed/store/reducers';
+import * as popularTagsEffects from './app/shared/components/popularTags/store/effects';
+import {
+  popularTagsKey,
+  popularTagsReducer,
+} from './app/shared/components/popularTags/store/reducers';
 import { authInterceptor } from './app/shared/services/authInterceptor';
 
 bootstrapApplication(AppComponent, {
@@ -23,7 +28,8 @@ bootstrapApplication(AppComponent, {
     provideStore(),
     provideState(authFeatureKey, authReducer), //registered in main because authentication is needed globally
     provideState(feedFeatureKey, feedReducer),
-    provideEffects(authEffects, feedEffects),
+    provideState(popularTagsKey, popularTagsReducer),
+    provideEffects(authEffects, feedEffects, popularTagsEffects),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode
