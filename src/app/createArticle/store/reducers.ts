@@ -1,39 +1,37 @@
 import { routerNavigatedAction } from '@ngrx/router-store';
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { ArticleStateInterface } from '../types/articleState.interface';
-import { articleActions } from './actions';
+import { CreateArticleStateInterface } from '../types/createArticleState.interface';
+import { createArticleAtions } from './actions';
 
-const initialState: ArticleStateInterface = {
-  isLoading: false,
-  error: null,
-  data: null,
+const initialState: CreateArticleStateInterface = {
+  isSubmitting: false,
+  validationErrors: null,
 };
 
-const articleFeature = createFeature({
-  name: 'article',
+const createArticleFeature = createFeature({
+  name: 'createArticle',
   reducer: createReducer(
     initialState,
-    on(articleActions.getArticle, (state) => ({
+    on(createArticleAtions.createArticle, (state) => ({
       ...state,
-      isLoading: true,
+      isSubmitting: true,
     })),
-    on(articleActions.getArticleSuccess, (state, action) => ({
+    on(createArticleAtions.createArticleSuccess, (state) => ({
       ...state,
-      isLoading: false,
-      data: action.article,
+      isSubmitting: false,
     })),
-    on(articleActions.getArticleFailure, (state) => ({
+    on(createArticleAtions.createArticleFailure, (state, action) => ({
       ...state,
-      isLoading: false,
+      isSubmitting: false,
+      validationErrors: action.errors,
     })),
     on(routerNavigatedAction, () => initialState)
   ),
 });
 
 export const {
-  name: articleFeatureKey,
-  reducer: articleReducer,
-  selectIsLoading,
-  selectError,
-  selectData: selectArticleData,
-} = articleFeature;
+  name: createArticleFeatureKey,
+  reducer: createArticleReducer,
+  selectIsSubmitting,
+  selectValidationErrors,
+} = createArticleFeature;
