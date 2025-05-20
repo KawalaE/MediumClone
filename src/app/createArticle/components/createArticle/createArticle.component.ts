@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ArticleFormComponent } from '../../../shared/components/articleForm/components/articleForm/articleForm.component';
 import { ArticleFormValuesInterface } from '../../../shared/components/articleForm/types/articleFormValues.interface';
 
@@ -10,6 +10,7 @@ import { ArticleFormValuesInterface } from '../../../shared/components/articleFo
   imports: [CommonModule, ArticleFormComponent],
 })
 export class CreateArticleComponent {
+  createArticleService = inject(CreateArticleComponent);
   initialValues = {
     title: '',
     description: '',
